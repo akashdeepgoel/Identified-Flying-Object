@@ -87,6 +87,7 @@ namespace Samples
 
         void GestureController_GestureRecognized(object sender, GestureEventArgs e)
         {
+            MyHttpClient request = new MyHttpClient();
             tblGestures.Text = e.GestureType.ToString();
             switch (e.GestureType)
             {
