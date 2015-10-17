@@ -108,10 +108,10 @@ router.route('/right')
 		});
 
 router.route('/dance')
-	//create a forward (accessed at GET http://localhost:8080/api/right)
+	//create a forward (accessed at GET http://localhost:8080/api/dance)
 	.get(function(req,res){
 		console.log("Dance");
-		res.json({message : "Naach rha hu mein"});
+		res.json({message : "Sunn raha hai na tu, Naach raha hun mein"});
 		client_arDrone.animate(thetaDance,2000);
 
 		});
