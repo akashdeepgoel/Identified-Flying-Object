@@ -107,6 +107,15 @@ router.route('/right')
 
 		});
 
+router.route('/dance')
+	//create a forward (accessed at GET http://localhost:8080/api/right)
+	.get(function(req,res){
+		console.log("Dance");
+		res.json({message : "Naach rha hu mein"});
+		client_arDrone.animate(thetaDance,2000);
+
+		});
+
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
