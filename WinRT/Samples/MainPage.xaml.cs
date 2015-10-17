@@ -4,6 +4,12 @@ using Windows.UI.Xaml.Controls;
 using WindowsPreview.Kinect;
 using LightBuzz.Vitruvius;
 using System.Diagnostics;
+using Windows.Storage.Pickers;
+using Windows.Graphics.Imaging;
+using Windows.Graphics.Display;
+using Windows.Storage;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -14,6 +20,9 @@ namespace Samples
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        private List<GestureDetector> gestureDetectorList = null;
+        public bool isTakingScreenshot = false;
         NavigationHelper _navigationHelper;
         public NavigationHelper NavigationHelper { get { return _navigationHelper; } }
 
@@ -39,6 +48,20 @@ namespace Samples
                 _gestureController = new GestureController();
                 _gestureController.GestureRecognized += GestureController_GestureRecognized;
             }
+            // Initialize the gesture detection objects for our gestures
+            this.gestureDetectorList = new List<GestureDetector>();
+
+            // Create a gesture detector for each body (6 bodies => 6 detectors)
+            int maxBodies = this._sensor.BodyFrameSource.BodyCount;
+            for (int i = 0; i < maxBodies; ++i)
+            {
+                GestureResultView result =
+                     new GestureResultView(i, false, false, 0.0f);
+                GestureDetector detector =
+                    new GestureDetector(this._sensor, result);
+                result.PropertyChanged += GestureResult_PropertyChanged;
+                this.gestureDetectorList.Add(detector);
+            }
         }
 
         private void PageRoot_Unloaded(object sender, RoutedEventArgs e)
@@ -53,11 +76,63 @@ namespace Samples
                 _sensor.Close();
             }
         }
+        private void RegisterGesture(BodyFrame bodyFrame)
+        {
+            bool dataReceived = false;
+            Body[] bodies = null;
 
+            if (bodyFrame != null)
+            {
+                if (bodies == null)
+                {
+                    // Creates an array of 6 bodies, which is the max number of bodies that Kinect can track simultaneously
+                    bodies = new Body[bodyFrame.BodyCount];
+                }
+
+                // The first time GetAndRefreshBodyData is called, Kinect will allocate each Body in the array.
+                // As long as those body objects are not disposed and not set to null in the array,
+                // those body objects will be re-used.
+                bodyFrame.GetAndRefreshBodyData(bodies);
+                dataReceived = true;
+            }
+
+            if (dataReceived)
+            {
+                // We may have lost/acquired bodies, so update the corresponding gesture detectors
+                if (bodies != null)
+                {
+                    // Loop through all bodies to see if any of the gesture detectors need to be updated
+                    for (int i = 0; i < bodyFrame.BodyCount; ++i)
+                    {
+                        Body body = bodies[i];
+                        ulong trackingId = body.TrackingId;
+
+                        // If the current body TrackingId changed, update the corresponding gesture detector with the new value
+                        if (trackingId != this.gestureDetectorList[i].TrackingId)
+                        {
+                            this.gestureDetectorList[i].TrackingId = trackingId;
+
+                            // If the current body is tracked, unpause its detector to get VisualGestureBuilderFrameArrived events
+                            // If the current body is not tracked, pause its detector so we don't waste resources trying to get invalid gesture results
+                            this.gestureDetectorList[i].IsPaused = trackingId == 0;
+                        }
+                    }
+                }
+            }
+        }
         void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
+            BodyFrame bodyFrame = null;
+            MultiSourceFrame multiSourceFrame = e.FrameReference.AcquireFrame();
+            if (multiSourceFrame == null)
+            {
+                return;
+            }
             var reference = e.FrameReference.AcquireFrame();
-
+            using (bodyFrame = multiSourceFrame.BodyFrameReference.AcquireFrame())
+            {
+                RegisterGesture(bodyFrame);
+            }
             // Color
             using (var frame = reference.ColorFrameReference.AcquireFrame())
             {
@@ -84,7 +159,22 @@ namespace Samples
                 }
             }
         }
+        void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            GestureResultView result = sender as GestureResultView;
+            if (result.Confidence > 0.8)
+            {
+                OurFunction();
+            }
+        }
+        async private void OurFunction()
+        {
+            MyHttpClient request1 = new MyHttpClient();
 
+            Debug.WriteLine("Dance Basanti!");
+            request1.send_request("/dance");
+
+        }
         void GestureController_GestureRecognized(object sender, GestureEventArgs e)
         {
             MyHttpClient request = new MyHttpClient();
