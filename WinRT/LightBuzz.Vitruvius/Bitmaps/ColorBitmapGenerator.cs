@@ -29,13 +29,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 using WindowsPreview.Kinect;
 
@@ -44,37 +39,8 @@ namespace LightBuzz.Vitruvius
     /// <summary>
     /// Creates the bitmap representation of a Kinect color frame.
     /// </summary>
-    public class ColorBitmapGenerator : IBitmapGenerator<ColorFrame>
+    public class ColorBitmapGenerator : BitmapGenerator<ColorFrame>
     {
-        #region Properties
-
-        /// <summary>
-        /// Returns the RGB pixel values.
-        /// </summary>
-        public byte[] Pixels { get; protected set; }
-
-        /// <summary>
-        /// Returns the width of the bitmap.
-        /// </summary>
-        public int Width { get; protected set; }
-
-        /// <summary>
-        /// Returns the height of the bitmap.
-        /// </summary>
-        public int Height { get; protected set; }
-
-        /// <summary>
-        /// Returns the stream of the bitmap.
-        /// </summary>
-        public Stream Stream { get; protected set; }
-
-        /// <summary>
-        /// Returns the actual bitmap.
-        /// </summary>
-        public WriteableBitmap Bitmap { get; protected set; }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -112,7 +78,7 @@ namespace LightBuzz.Vitruvius
         /// Updates the bitmap with new frame data.
         /// </summary>
         /// <param name="frame">The specified Kinect color frame.</param>
-        public void Update(ColorFrame frame)
+        public override void Update(ColorFrame frame)
         {
             Update(frame, ColorImageFormat.Bgra);
         }

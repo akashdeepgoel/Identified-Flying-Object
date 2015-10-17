@@ -29,12 +29,11 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using WindowsPreview.Kinect;
+using Windows.Storage;
+using System.Threading.Tasks;
 
 namespace LightBuzz.Vitruvius
 {
@@ -49,6 +48,11 @@ namespace LightBuzz.Vitruvius
         /// The body collection a Kinect sensor can recognize.
         /// </summary>
         static IList<Body> _bodies = null;
+
+        /// <summary>
+        /// The frame capture utility.
+        /// </summary>
+        static FrameCapture _capture = new FrameCapture();
 
         #endregion
 
@@ -72,11 +76,11 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Returns the default body, aka the one that is currently in front of the Kinect sensor.
+        /// Returns the body that is currently to the sensor.
         /// </summary>
         /// <param name="bodies">A list of bodies to look at.</param>
         /// <returns>The first tracked body.</returns>
-        public static Body Default(this IEnumerable<Body> bodies)
+        public static Body Closest(this IEnumerable<Body> bodies)
         {
             Body result = null;
             double closestBodyDistance = double.MaxValue;
@@ -100,7 +104,28 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Retruns the height of the specified body.
+        /// Determines whether the current body is stable, without leaning.
+        /// </summary>
+        /// <param name="body">The body to examine.</param>
+        /// <param name="thresholdX">The accepted lean bound in the X axis. Defaults to 0.2</param>
+        /// <param name="thresholdY">The accepted lean bound in the Y axis. Defaults to 0.3.</param>
+        /// <returns>True if the body is stable. False if the body is leaning on one side.</returns>
+        public static bool IsStable(this Body body, float thresholdX = 0.2f, float thresholdY = 0.3f)
+        {
+            if (body.LeanTrackingState == TrackingState.Tracked)
+            {
+                if (body.Lean.X >= -thresholdX && body.Lean.X <= thresholdX &&
+                    body.Lean.Y >= -thresholdY && body.Lean.Y <= thresholdY)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Retruns the height of the current body.
         /// </summary>
         /// <param name="body">The specified user body.</param>
         /// <returns>The height of the body in meters.</returns>
@@ -134,7 +159,7 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Returns the upper height of the specified body (head to waist).
+        /// Returns the upper height of the current body (head to waist).
         /// </summary>
         /// <param name="body">A user body.</param>
         /// <returns>The upper height of the body in meters.</returns>
@@ -150,7 +175,7 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Returns a collection of the tracked joints of the specified body.
+        /// Returns a collection of the tracked joints of the current body.
         /// </summary>
         /// <param name="body">A user body.</param>
         /// <param name="includeInferred">True to include the joints with a TrackingState of Tracked or Inferred. False to include only the joints with a TrackingState of Tracked.</param>
@@ -183,13 +208,55 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Returns a JSON representation of the specified body (key-value pairs).
+        /// Serializes the bodies of the current <see cref="BodyFrame"/> and saves the file to the specified location.
         /// </summary>
-        /// <param name="body">A user body.</param>
-        /// <returns>The body properties, joints, and oriantations in JSON format.</returns>
-        public static string ToJSON(this Body body)
+        /// <param name="frame">The frame to capture.</param>
+        /// <param name="destination">The destination file.</param>
+        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
+        public static async Task<bool> Save(this BodyFrame frame, StorageFile destination)
         {
-            return string.Empty;
+            string json = frame.Serialize();
+
+            return await _capture.Save(json, destination);
+        }
+
+        /// <summary>
+        /// Serializes the current collection of <see cref="Body"/> and saves the file to the specified location.
+        /// </summary>
+        /// <param name="bodies">The body collection to capture.</param>
+        /// <param name="destination">The destination file.</param>
+        /// <returns>True if the body collection was successfully saved. False otherwise.</returns>
+        public static async Task<bool> Save(this IEnumerable<Body> bodies, StorageFile destination)
+        {
+            string json = bodies.Serialize();
+
+            return await _capture.Save(json, destination);
+        }
+
+        /// <summary>
+        /// Serializes the current <see cref="Body"/> and saves the file to the specified location.
+        /// </summary>
+        /// <param name="body">The body to capture.</param>
+        /// <param name="destination">The destination file.</param>
+        /// <returns>True if the body was successfully saved. False otherwise.</returns>
+        public static async Task<bool> Save(this Body body, StorageFile destination)
+        {
+            string json = body.Serialize();
+
+            return await _capture.Save(json, destination);
+        }
+
+        /// <summary>
+        /// Serializes the current <see cref="Joint"/> and saves the file to the specified location.
+        /// </summary>
+        /// <param name="joint">The joint to capture.</param>
+        /// <param name="destination">The destination file.</param>
+        /// <returns>True if the joint was successfully saved. False otherwise.</returns>
+        public static async Task<bool> Save(this Joint joint, StorageFile destination)
+        {
+            string json = joint.Serialize();
+
+            return await _capture.Save(json, destination);
         }
 
         #endregion
@@ -197,7 +264,7 @@ namespace LightBuzz.Vitruvius
         #region Utilities
 
         /// <summary>
-        /// Calculates the number of the tracked joints from the spcified collection.
+        /// Calculates the number of the tracked joints from the current collection.
         /// </summary>
         /// <param name="joints">A collection of joints.</param>
         /// <returns>The number of the accurately tracked joints.</returns>
@@ -217,7 +284,7 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Calculates the number of the tracked joints from the spcified collection.
+        /// Calculates the number of the tracked joints from the specified collection.
         /// </summary>
         /// <param name="joints">A collection of joints.</param>
         /// <returns>The number of the accurately tracked joints.</returns>

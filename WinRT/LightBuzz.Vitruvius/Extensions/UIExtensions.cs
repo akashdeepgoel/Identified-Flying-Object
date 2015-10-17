@@ -30,13 +30,8 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace LightBuzz.Vitruvius
@@ -118,42 +113,6 @@ namespace LightBuzz.Vitruvius
             {
                 element.Visibility = Visibility.Collapsed;
             }
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Converts boolean values to visibility. True represents visible and false represents hidden elements.
-    /// </summary>
-    public class BoolToVisibilityConverter : IValueConverter
-    {
-        #region Public methods
-
-        /// <summary>
-        /// Converts the specified boolean value to its corresponding visibility enumeration.
-        /// </summary>
-        /// <param name="value">The boolean value to convert.</param>
-        /// <param name="targetType">The target type.</param>
-        /// <param name="parameter">The parameter of the conversion.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>Visibility.Visible if true. Visibility.Collapsed if false.</returns>
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        /// <summary>
-        /// Converts the specified visibility enumeration to its corresponding boolean value.
-        /// </summary>
-        /// <param name="value">The visibility value to convert.</param>
-        /// <param name="targetType">The target type.</param>
-        /// <param name="parameter">The parameter of the conversion.</param>
-        /// <param name="language">The language.</param>
-        /// <returns>True for visible. False otherwise.</returns>
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return (Visibility)value == Visibility.Visible ? true : false;
         }
 
         #endregion

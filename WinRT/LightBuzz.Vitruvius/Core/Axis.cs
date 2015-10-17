@@ -29,20 +29,26 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using WindowsPreview.Kinect;
-
 namespace LightBuzz.Vitruvius
 {
     /// <summary>
-    /// Represents a single gesture segment which uses relative positioning of body parts to detect a gesture.
+    /// Represents an axis from the 3D space.
     /// </summary>
-    public interface IGestureSegment
+    public enum Axis
     {
         /// <summary>
-        /// Updates the current gesture.
+        /// The X axis.
         /// </summary>
-        /// <param name="body">The body.</param>
-        /// <returns>A GesturePartResult based on whether the gesture part has been completed.</returns>
-        GesturePartResult Update(Body body);
+        X = 0,
+
+        /// <summary>
+        /// The Y axis.
+        /// </summary>
+        Y = 1,
+
+        /// <summary>
+        /// The Z axis.
+        /// </summary>
+        Z = 2
     }
 }

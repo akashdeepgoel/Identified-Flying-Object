@@ -30,19 +30,9 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using WindowsPreview.Kinect;
 
@@ -50,10 +40,16 @@ using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius.Controls
 {
+    /// <summary>
+    /// Provides a XAML User Interface to select body joints.
+    /// </summary>
     public sealed partial class KinectJointSelector : UserControl
     {
         #region Constructor
 
+        /// <summary>
+        /// Creates a new instance of <see cref="KinectJointSelector"/>.
+        /// </summary>
         public KinectJointSelector()
         {
             InitializeComponent();
@@ -65,38 +61,34 @@ namespace LightBuzz.Vitruvius.Controls
 
         #region Dependency properties
 
-        public bool IsMale
+        /// <summary>
+        /// Determines whether the User Interface will display the joints.
+        /// </summary>
+        public Visibility JointsVisibility
         {
             get
             {
-                return (bool)GetValue(GenderProperty);
+                return (Visibility)GetValue(JointsVisibilityProperty);
             }
             set
             {
-                SetValue(GenderProperty, value);
+                SetValue(JointsVisibilityProperty, value);
             }
         }
-        public static readonly DependencyProperty GenderProperty =
-            DependencyProperty.Register("IsMale", typeof(bool), typeof(KinectJointSelector), new PropertyMetadata(true));
 
-        public bool ShowJoints
-        {
-            get
-            {
-                return (bool)GetValue(ShowJointsProperty);
-            }
-            set
-            {
-                SetValue(ShowJointsProperty, value);
-            }
-        }
-        public static readonly DependencyProperty ShowJointsProperty =
-            DependencyProperty.Register("ShowJoints", typeof(bool), typeof(KinectJointSelector), new PropertyMetadata(true));
+        /// <summary>
+        /// The <see cref="JointsVisibility"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty JointsVisibilityProperty =
+            DependencyProperty.Register("JointsVisibility", typeof(Visibility), typeof(KinectJointSelector), new PropertyMetadata(Visibility.Visible));
 
         #endregion
 
         #region Events
 
+        /// <summary>
+        /// Raised when a joint is selected.
+        /// </summary>
         public event EventHandler<JointType> JointSelected;
 
         #endregion
@@ -108,11 +100,9 @@ namespace LightBuzz.Vitruvius.Controls
             foreach (var item in joints.Children)
             {
                 Ellipse element = item as Ellipse;
-                //element.Fill = DEFAULT_ITEM_BRUSH;
             }
 
             Ellipse ellipse = sender as Ellipse;
-            //ellipse.Fill = SELECTED_ITEM_BRUSH;
 
             JointType joint = (JointType)int.Parse(ellipse.Tag.ToString());
 
@@ -126,6 +116,10 @@ namespace LightBuzz.Vitruvius.Controls
 
         #region Public methods
 
+        /// <summary>
+        /// Selects the specified joint.
+        /// </summary>
+        /// <param name="joint">The joint to select.</param>
         public void SelectJoint(JointType joint)
         {
             string tag = ((int)joint).ToString();
@@ -133,16 +127,17 @@ namespace LightBuzz.Vitruvius.Controls
             foreach (var item in joints.Children)
             {
                 Ellipse element = item as Ellipse;
-                //element.Fill = element.Tag.ToString() == tag ? SELECTED_ITEM_BRUSH : DEFAULT_ITEM_BRUSH;
             }
         }
 
+        /// <summary>
+        /// Clears the selections and resets the User Interface.
+        /// </summary>
         public void Clear()
         {
             foreach (var item in joints.Children)
             {
                 Ellipse element = item as Ellipse;
-                //element.Fill = DEFAULT_ITEM_BRUSH;
             }
         }
 

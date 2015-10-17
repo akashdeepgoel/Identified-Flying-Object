@@ -31,20 +31,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using WindowsPreview.Kinect;
 
@@ -52,6 +44,9 @@ using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius.Controls
 {
+    /// <summary>
+    /// Represents a XAML User Interface frame where RGB frames, body joints and body bones are drawn.
+    /// </summary>
     public sealed partial class KinectViewer : UserControl
     {
         #region Constants
@@ -85,7 +80,7 @@ namespace LightBuzz.Vitruvius.Controls
         #region Constructor
 
         /// <summary>
-        /// Creates a new instance of KinectViewer.
+        /// Creates a new instance of <see cref="KinectViewer"/>.
         /// </summary>
         public KinectViewer()
         {
@@ -106,17 +101,23 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (CoordinateMapper)GetValue(CoordinateMapperProperty); }
             set { SetValue(CoordinateMapperProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="CoordinateMapper"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty CoordinateMapperProperty =
             DependencyProperty.Register("CoordinateMapper", typeof(CoordinateMapper), typeof(KinectViewer), new PropertyMetadata(KinectSensor.GetDefault().CoordinateMapper));
 
         /// <summary>
-        /// The visualization mode of the control (Color, Depth, Infrared). Defaults to Color.
+        /// The visualization mode of the control (<see cref="Visualization.Color"/>, <see cref="Visualization.Depth"/>, <see cref="Visualization.Infrared"/>). Defaults to <see cref="Visualization.Color"/>.
         /// </summary>
         public Visualization Visualization
         {
             get { return (Visualization)GetValue(VisualizationProperty); }
             set { SetValue(VisualizationProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="Visualization"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty VisualizationProperty =
             DependencyProperty.Register("Visualization", typeof(Visualization), typeof(KinectViewer), new PropertyMetadata(Visualization.Color));
 
@@ -128,6 +129,9 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (ImageSource)GetValue(ImageProperty); }
             set { SetValue(ImageProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="Image"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ImageProperty =
             DependencyProperty.Register("Image", typeof(ImageSource), typeof(KinectViewer), new PropertyMetadata(null));
 

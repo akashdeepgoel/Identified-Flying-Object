@@ -7,14 +7,18 @@
     <ProjectGuid>{4C4DBAB9-D5D6-4D46-80A8-3A474853031D}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VitruviusTest</RootNamespace>
-    <AssemblyName>VitruviusTest</AssemblyName>
+    <RootNamespace>Samples</RootNamespace>
+    <AssemblyName>Samples</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>VitruviusTest_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Samples_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>59906ED89F8400154313AD309F91F896C2874089</PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <AppxPackageDir>C:\Users\Vangos\Desktop\Vitruvius_XAML</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -118,8 +122,14 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="FeaturesPage.xaml.cs">
+      <DependentUpon>FeaturesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GesturesPage.xaml.cs">
       <DependentUpon>GesturesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JointSelectionPage.xaml.cs">
+      <DependentUpon>JointSelectionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -130,6 +140,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="Samples_StoreKey.pfx" />
     <None Include="VitruviusTest_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +149,7 @@
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Assets\VitruviusLogo.png" />
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -156,7 +168,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FeaturesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GesturesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JointSelectionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -166,6 +186,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="Microsoft.Kinect.Face, Version=2.0">
+      <Name>Microsoft.Kinect.Face</Name>
+    </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, version=12.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows</Name>
     </SDKReference>
@@ -174,10 +197,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LightBuzz.Vitruvius.Video\LightBuzz.Vitruvius.Video.vcxproj">
-      <Project>{2c0ebd30-1b81-4ea0-8bb2-7aecf0d04bb6}</Project>
-      <Name>LightBuzz.Vitruvius.Video</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LightBuzz.Vitruvius\LightBuzz.Vitruvius.csproj">
       <Project>{648fb806-08fe-45b3-b400-00b0c653776b}</Project>
       <Name>LightBuzz.Vitruvius</Name>

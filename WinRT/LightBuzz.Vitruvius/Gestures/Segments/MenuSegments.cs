@@ -34,7 +34,7 @@ using WindowsPreview.Kinect;
 namespace LightBuzz.Vitruvius.Gestures
 {
     /// <summary>
-    /// The menu gesture segment
+    /// The first part of a <see cref="GestureType.Menu"/> gesture.
     /// </summary>
     public class MenuSegment1 : IGestureSegment
     {

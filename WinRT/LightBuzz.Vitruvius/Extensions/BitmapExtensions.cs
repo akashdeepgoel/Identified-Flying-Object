@@ -29,11 +29,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.IO;
-using System.Windows;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml.Media.Imaging;
 using WindowsPreview.Kinect;
 using System.Threading.Tasks;
@@ -64,9 +59,14 @@ namespace LightBuzz.Vitruvius
         static InfraredBitmapGenerator _infraredBitmapGenerator = new InfraredBitmapGenerator();
 
         /// <summary>
+        /// The background removal generator.
+        /// </summary>
+        static GreenScreenBitmapGenerator _greenScreenBitmapGenerator = new GreenScreenBitmapGenerator();
+
+        /// <summary>
         /// The bitmap capture utility.
         /// </summary>
-        static BitmapCapture _capture = new BitmapCapture();
+        static FrameCapture _capture = new FrameCapture();
 
         #endregion
 
@@ -75,8 +75,8 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified color frame to a bitmap image.
         /// </summary>
-        /// <param name="frame">The specified color frame.</param>
-        /// <returns>The bitmap representation of the color frame.</returns>
+        /// <param name="frame">The specified <see cref="ColorFrame"/>.</param>
+        /// <returns>The bitmap representation of the current frame.</returns>
         public static WriteableBitmap ToBitmap(this ColorFrame frame)
         {
             _colorBitmapGenerator.Update(frame);
@@ -87,8 +87,8 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified depth frame to a bitmap image.
         /// </summary>
-        /// <param name="frame">The specified depth frame.</param>
-        /// <returns>The bitmap representation of the specified depth frame.</returns>
+        /// <param name="frame">The specified <see cref="DepthFrame"/>.</param>
+        /// <returns>The bitmap representation of the current frame.</returns>
         public static WriteableBitmap ToBitmap(this DepthFrame frame)
         {
             _depthBitmapGenerator.Update(frame);
@@ -99,9 +99,9 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified depth and infrared frames to a bitmap image with the players highlighted.
         /// </summary>
-        /// <param name="depthFrame">The specified depth frame.</param>
-        /// <param name="bodyIndexFrame">The specified body index frame.</param>
-        /// <returns>The corresponding System.Windows.Media.Imaging.BitmapSource representation of the depth frame.</returns>
+        /// <param name="depthFrame">The specified <see cref="DepthFrame"/>.</param>
+        /// <param name="bodyIndexFrame">The specified <see cref="BodyIndexFrame"/>.</param>
+        /// <returns>The bitmap representation of the current frame.</returns>
         public static WriteableBitmap ToBitmap(this DepthFrame depthFrame, BodyIndexFrame bodyIndexFrame)
         {
             _depthBitmapGenerator.Update(depthFrame, bodyIndexFrame);
@@ -112,13 +112,55 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified infrared frame to a bitmap image.
         /// </summary>
-        /// <param name="frame">The specified infrared frame.</param>
-        /// <returns>The bitmap representation of the specified infrared frame.</returns>
+        /// <param name="frame">The specified <see cref="InfraredFrame"/>.</param>
+        /// <returns>The bitmap representation of the current frame.</returns>
         public static WriteableBitmap ToBitmap(this InfraredFrame frame)
         {
             _infraredBitmapGenerator.Update(frame);
 
             return _infraredBitmapGenerator.Bitmap;
+        }
+
+        /// <summary>
+        /// Removes the background of the specified frames and generates a new bitmap (green-screen effect).
+        /// </summary>
+        /// <param name="colorFrame">The specified <see cref="ColorFrame"/>.</param>
+        /// <param name="depthFrame">The specified <see cref="DepthFrame"/>.</param>
+        /// <param name="bodyIndexFrame">The specified <see cref="BodyIndexFrame"/>.</param>
+        /// <returns>The bitmap representation of the generated frame.</returns>
+        public static WriteableBitmap GreenScreen(this ColorFrame colorFrame, DepthFrame depthFrame, BodyIndexFrame bodyIndexFrame)
+        {
+            _greenScreenBitmapGenerator.Update(colorFrame, depthFrame, bodyIndexFrame);
+
+            return _greenScreenBitmapGenerator.Bitmap;
+        }
+
+        /// <summary>
+        /// Removes the background of the specified frames and generates a new bitmap (green-screen effect).
+        /// </summary>
+        /// <param name="depthFrame">The specified <see cref="DepthFrame"/>.</param>
+        /// <param name="colorFrame">The specified <see cref="ColorFrame"/>.</param>
+        /// <param name="bodyIndexFrame">The specified <see cref="BodyIndexFrame"/>.</param>
+        /// <returns>The bitmap representation of the generated frame.</returns>
+        public static WriteableBitmap GreenScreen(this DepthFrame depthFrame, ColorFrame colorFrame, BodyIndexFrame bodyIndexFrame)
+        {
+            _greenScreenBitmapGenerator.Update(colorFrame, depthFrame, bodyIndexFrame);
+
+            return _greenScreenBitmapGenerator.Bitmap;
+        }
+
+        /// <summary>
+        /// Removes the background of the specified frames and generates a new bitmap (green-screen effect).
+        /// </summary>
+        /// <param name="bodyIndexFrame">The specified <see cref="BodyIndexFrame"/>.</param>
+        /// <param name="colorFrame">The specified <see cref="ColorFrame"/>.</param>
+        /// <param name="depthFrame">The specified <see cref="DepthFrame"/>.</param>
+        /// <returns>The bitmap representation of the generated frame.</returns>
+        public static WriteableBitmap GreenScreen(this BodyIndexFrame bodyIndexFrame, ColorFrame colorFrame, DepthFrame depthFrame)
+        {
+            _greenScreenBitmapGenerator.Update(colorFrame, depthFrame, bodyIndexFrame);
+
+            return _greenScreenBitmapGenerator.Bitmap;
         }
 
         /// <summary>
@@ -149,18 +191,7 @@ namespace LightBuzz.Vitruvius
         /// Saves the specified bitmap to the specified location.
         /// </summary>
         /// <param name="source">The source bitmap image.</param>
-        /// <param name="destination">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <returns>True if the bitmap file was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this WriteableBitmap source, string path)
-        {
-            return await _capture.Save(source, path);
-        }
-
-        /// <summary>
-        /// Saves the specified bitmap to the specified location.
-        /// </summary>
-        /// <param name="source">The source bitmap image.</param>
-        /// <param name="destination">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
+        /// <param name="path">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <param name="width">The desired width of the image file.</param>
         /// <param name="height">The desired height of the image file.</param>
         /// <returns>True if the bitmap file was successfully saved. False otherwise.</returns>
@@ -172,7 +203,7 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified color frame to a bitmap and saves it to the specified location.
         /// </summary>
-        /// <param name="source">The source color frame.</param>
+        /// <param name="frame">The source color frame.</param>
         /// <param name="destination">The destination storage file for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <returns>True if the frame was successfully saved. False otherwise.</returns>
         public static async Task<bool> Save(this ColorFrame frame, StorageFile destination)
@@ -185,7 +216,7 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified color frame to a bitmap and saves it to the specified location.
         /// </summary>
-        /// <param name="source">The source color frame.</param>
+        /// <param name="frame">The source color frame.</param>
         /// <param name="destination">The destination storage file for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <param name="width">The width of the image file.</param>
         /// <param name="height">The height of the image file.</param>
@@ -198,37 +229,9 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Converts the specified color frame to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="source">The source color frame.</param>
-        /// <param name="destination">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this ColorFrame frame, string path)
-        {
-            var bitmap = frame.ToBitmap();
-
-            return await _capture.Save(bitmap, path);
-        }
-
-        /// <summary>
-        /// Converts the specified color frame to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="source">The source color frame.</param>
-        /// <param name="destination">The destination path for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <param name="width">The width of the image file.</param>
-        /// <param name="height">The height of the image file.</param>
-        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this ColorFrame frame, string path, int width, int height)
-        {
-            var bitmap = frame.ToBitmap();
-
-            return await _capture.Save(bitmap, path, width, height);
-        }
-
-        /// <summary>
         /// Converts the specified depth frame to a bitmap and saves it to the specified location.
         /// </summary>
-        /// <param name="source">The source depth frame.</param>
+        /// <param name="frame">The source depth frame.</param>
         /// <param name="destination">The destination storage file for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <returns>True if the frame was successfully saved. False otherwise.</returns>
         public static async Task<bool> Save(this DepthFrame frame, StorageFile destination)
@@ -241,7 +244,7 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified depth frame to a bitmap and saves it to the specified location.
         /// </summary>
-        /// <param name="source">The source depth frame.</param>
+        /// <param name="frame">The source depth frame.</param>
         /// <param name="destination">The destination storage file for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <param name="width">The width of the image file.</param>
         /// <param name="height">The height of the image file.</param>
@@ -254,37 +257,9 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Converts the specified depth frame to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="source">The source depth frame.</param>
-        /// <param name="destination">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this DepthFrame frame, string path)
-        {
-            var bitmap = frame.ToBitmap();
-
-            return await _capture.Save(bitmap, path);
-        }
-
-        /// <summary>
-        /// Converts the specified depth frame to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="source">The source depth frame.</param>
-        /// <param name="destination">The destination path for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <param name="width">The width of the image file.</param>
-        /// <param name="height">The height of the image file.</param>
-        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this DepthFrame frame, string path, int width, int height)
-        {
-            var bitmap = frame.ToBitmap();
-
-            return await _capture.Save(bitmap, path, width, height);
-        }
-
-        /// <summary>
         /// Converts the specified infrared frame to a bitmap and saves it to the specified location.
         /// </summary>
-        /// <param name="source">The source infrared frame.</param>
+        /// <param name="frame">The source infrared frame.</param>
         /// <param name="destination">The destination storage file for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <returns>True if the frame was successfully saved. False otherwise.</returns>
         public static async Task<bool> Save(this InfraredFrame frame, StorageFile destination)
@@ -297,7 +272,7 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Converts the specified infrared frame to a bitmap and saves it to the specified location.
         /// </summary>
-        /// <param name="source">The source infrared frame.</param>
+        /// <param name="frame">The source infrared frame.</param>
         /// <param name="destination">The destination storage file for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
         /// <param name="width">The width of the image file.</param>
         /// <param name="height">The height of the image file.</param>
@@ -307,34 +282,6 @@ namespace LightBuzz.Vitruvius
             var bitmap = frame.ToBitmap();
 
             return await _capture.Save(bitmap, destination, width, height);
-        }
-
-        /// <summary>
-        /// Converts the specified infrared frame to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="source">The source infrared frame.</param>
-        /// <param name="destination">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this InfraredFrame frame, string path)
-        {
-            var bitmap = frame.ToBitmap();
-
-            return await _capture.Save(bitmap, path);
-        }
-
-        /// <summary>
-        /// Converts the specified infrared frame to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="source">The source infrared frame.</param>
-        /// <param name="destination">The destination path for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <param name="width">The width of the image file.</param>
-        /// <param name="height">The height of the image file.</param>
-        /// <returns>True if the frame was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this InfraredFrame frame, string path, int width, int height)
-        {
-            var bitmap = frame.ToBitmap();
-
-            return await _capture.Save(bitmap, path, width, height);
         }
 
         /// <summary>
@@ -365,36 +312,6 @@ namespace LightBuzz.Vitruvius
             var bitmap = depthFrame.ToBitmap(bodyIndexFrame);
 
             return await _capture.Save(bitmap, destination, width, height);
-        }
-
-        /// <summary>
-        /// Converts the specified depth and body index frames to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="depthFrame">The source depth frame.</param>
-        /// <param name="bodyIndexFrame">The source body index frame.</param>
-        /// <param name="destination">The destination path for the new image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <returns>True if the image was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this DepthFrame depthFrame, BodyIndexFrame bodyIndexFrame, string path)
-        {
-            var bitmap = depthFrame.ToBitmap(bodyIndexFrame);
-
-            return await _capture.Save(bitmap, path);
-        }
-
-        /// <summary>
-        /// Converts the specified depth and body index frames to a bitmap and saves it to the specified location.
-        /// </summary>
-        /// <param name="depthFrame">The source depth frame.</param>
-        /// <param name="bodyIndexFrame">The source body index frame.</param>
-        /// <param name="destination">The destination path for the image. JPEG, PNG, GIF, BMP and TIFF formats are supported.</param>
-        /// <param name="width">The width of the image file.</param>
-        /// <param name="height">The height of the image file.</param>
-        /// <returns>True if the image was successfully saved. False otherwise.</returns>
-        public static async Task<bool> Save(this DepthFrame depthFrame, BodyIndexFrame bodyIndexFrame, string path, int width, int height)
-        {
-            var bitmap = depthFrame.ToBitmap(bodyIndexFrame);
-
-            return await _capture.Save(bitmap, path, width, height);
         }
 
         #endregion

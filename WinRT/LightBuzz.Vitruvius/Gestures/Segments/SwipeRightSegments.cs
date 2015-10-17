@@ -34,7 +34,7 @@ using WindowsPreview.Kinect;
 namespace LightBuzz.Vitruvius.Gestures
 {
     /// <summary>
-    /// The first part of the swipe right gesture
+    /// The first part of a <see cref="GestureType.SwipeRight"/> gesture.
     /// </summary>
     public class SwipeRightSegment1 : IGestureSegment
     {
@@ -74,7 +74,7 @@ namespace LightBuzz.Vitruvius.Gestures
     }
 
     /// <summary>
-    /// The second part of the swipe right gesture
+    /// The second part of a <see cref="GestureType.SwipeRight"/> gesture.
     /// </summary>
     public class SwipeRightSegment2 : IGestureSegment
     {
@@ -114,7 +114,7 @@ namespace LightBuzz.Vitruvius.Gestures
     }
 
     /// <summary>
-    /// The third part of the swipe right gesture
+    /// The third part of a <see cref="GestureType.SwipeRight"/> gesture.
     /// </summary>
     public class SwipeRightSegment3 : IGestureSegment
     {

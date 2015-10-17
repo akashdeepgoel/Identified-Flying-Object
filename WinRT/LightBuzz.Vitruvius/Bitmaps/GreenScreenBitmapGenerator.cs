@@ -31,13 +31,7 @@
 
 using WindowsPreview.Kinect;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using Windows.UI.Xaml.Media.Imaging;
 using System.IO;
 
@@ -46,19 +40,9 @@ namespace LightBuzz.Vitruvius
     /// <summary>
     /// Provides extension methods for removing the background of a Kinect frame.
     /// </summary>
-    public class BackgroundRemovalTool
+    public class GreenScreenBitmapGenerator : BitmapGenerator<ColorFrame>
     {
         #region Members
-
-        /// <summary>
-        /// The bitmap source.
-        /// </summary>
-        WriteableBitmap _bitmap = null;
-
-        /// <summary>
-        /// The stream for the bitmap.
-        /// </summary>
-        static Stream _stream = null;
 
         /// <summary>
         /// The depth values.
@@ -96,12 +80,12 @@ namespace LightBuzz.Vitruvius
 
         #endregion
 
-        #region Constructor
+        #region Constructors
 
         /// <summary>
-        /// Creates a new instance of BackgroundRemovalTool.
+        /// Creates a new instance of <see cref="GreenScreenBitmapGenerator"/>.
         /// </summary>
-        public BackgroundRemovalTool()
+        public GreenScreenBitmapGenerator()
         {
             if (CoordinateMapper == null)
             {
@@ -110,10 +94,10 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Creates a new instance of BackgroundRemovalTool.
+        /// Creates a new instance of <see cref="GreenScreenBitmapGenerator"/>.
         /// </summary>
         /// <param name="mapper">The coordinate mapper used for the background removal.</param>
-        public BackgroundRemovalTool(CoordinateMapper mapper)
+        public GreenScreenBitmapGenerator(CoordinateMapper mapper)
         {
             CoordinateMapper = mapper;
         }
@@ -123,13 +107,12 @@ namespace LightBuzz.Vitruvius
         #region Methods
 
         /// <summary>
-        /// Converts a depth frame to the corresponding System.Windows.Media.Imaging.BitmapSource and removes the background (green-screen effect).
+        /// Updates the bitmap with new frame data.
         /// </summary>
         /// <param name="depthFrame">The specified depth frame.</param>
         /// <param name="colorFrame">The specified color frame.</param>
         /// <param name="bodyIndexFrame">The specified body index frame.</param>
-        /// <returns>The corresponding System.Windows.Media.Imaging.BitmapSource representation of image.</returns>
-        public WriteableBitmap GreenScreen(ColorFrame colorFrame, DepthFrame depthFrame, BodyIndexFrame bodyIndexFrame)
+        public void Update(ColorFrame colorFrame, DepthFrame depthFrame, BodyIndexFrame bodyIndexFrame)
         {
             int colorWidth = colorFrame.FrameDescription.Width;
             int colorHeight = colorFrame.FrameDescription.Height;
@@ -147,8 +130,8 @@ namespace LightBuzz.Vitruvius
                 _colorData = new byte[colorWidth * colorHeight * Constants.BYTES_PER_PIXEL];
                 _displayPixels = new byte[depthWidth * depthHeight * Constants.BYTES_PER_PIXEL];
                 _colorPoints = new ColorSpacePoint[depthWidth * depthHeight];
-                _bitmap = new WriteableBitmap(depthWidth, depthHeight);
-                _stream = _bitmap.PixelBuffer.AsStream();
+                Bitmap = new WriteableBitmap(depthWidth, depthHeight);
+                Stream = Bitmap.PixelBuffer.AsStream();
             }
 
             if (((depthWidth * depthHeight) == _depthData.Length) && ((colorWidth * colorHeight * Constants.BYTES_PER_PIXEL) == _colorData.Length) && ((bodyIndexWidth * bodyIndexHeight) == _bodyData.Length))
@@ -199,13 +182,11 @@ namespace LightBuzz.Vitruvius
                     }
                 }
 
-                _stream.Seek(0, SeekOrigin.Begin);
-                _stream.Write(_displayPixels, 0, _displayPixels.Length);
+                Stream.Seek(0, SeekOrigin.Begin);
+                Stream.Write(_displayPixels, 0, _displayPixels.Length);
 
-                _bitmap.Invalidate();
+                Bitmap.Invalidate();
             }
-
-            return _bitmap;
         }
 
         #endregion

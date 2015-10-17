@@ -29,76 +29,49 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LightBuzz_Vitruvius_Video;
-using Windows.Storage;
+using System.IO;
+using Windows.UI.Xaml.Media.Imaging;
 using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius
 {
     /// <summary>
-    /// Provides some common functionality for recording the color Kinect stream.
+    /// Describes a generic bitmap generator.
     /// </summary>
-    public class ColorVideoRecorder : VideoRecorder<ColorFrame>
+    /// <typeparam name="T">The type of frame (<see cref="ColorFrame"/>, <see cref="DepthFrame"/>, <see cref="InfraredFrame"/>, <see cref="BodyIndexFrame"/>, etc).</typeparam>
+    public abstract class BitmapGenerator<T>
     {
-        #region Properties
+        /// <summary>
+        /// Returns the RGB pixel values.
+        /// </summary>
+        public byte[] Pixels { get; protected set; }
 
         /// <summary>
-        /// The bitmap pixel generator.
+        /// Returns the width of the bitmap.
         /// </summary>
-        public ColorBitmapGenerator BitmapGenerator { get; protected set; }
-
-        #endregion
-
-        #region Constructors
+        public int Width { get; protected set; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ColorFrameVideoRecorder" />.
+        /// Returns the height of the bitmap.
         /// </summary>
-        public ColorVideoRecorder()
+        public int Height { get; protected set; }
+
+        /// <summary>
+        /// Returns the stream of the bitmap.
+        /// </summary>
+        public Stream Stream { get; protected set; }
+
+        /// <summary>
+        /// Returns the actual bitmap.
+        /// </summary>
+        public WriteableBitmap Bitmap { get; protected set; }
+
+        /// <summary>
+        /// Updates the bitmap with new frame data.
+        /// </summary>
+        /// <param name="frame">The specified Kinect frame.</param>
+        public virtual void Update(T frame)
         {
-            HD = false;
         }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="ColorFrameVideoRecorder" />.
-        /// </summary>
-        /// <param name="hd">Specifies whether the recorder will record in HD.</param>
-        public ColorVideoRecorder(bool hd)
-        {
-            HD = hd;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Updates the current frame.
-        /// </summary>
-        /// <param name="frame">The specified <see cref="ColorFrame"/>.</param>
-        public override async Task Update(ColorFrame frame)
-        {
-            if (BitmapGenerator == null)
-            {
-                BitmapGenerator = new ColorBitmapGenerator();
-
-                _originalWidth = frame.FrameDescription.Width;
-                _originalHeight = frame.FrameDescription.Height;
-
-                Fps = 15;
-                Delay = 66;
-            }
-
-            BitmapGenerator.Update(frame, ColorImageFormat.Rgba);
-
-            Update(BitmapGenerator.Pixels);
-        }
-
-        #endregion
     }
 }

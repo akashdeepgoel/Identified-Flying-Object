@@ -1,4 +1,4 @@
-﻿﻿//
+﻿//
 // Copyright (c) LightBuzz Software.
 // All rights reserved.
 //
@@ -32,11 +32,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius
 {
@@ -226,17 +221,23 @@ namespace LightBuzz.Vitruvius
             return vector1.Equals(vector2);
         }
 
+        /// <summary>
+        /// Calculates the Dot Product of the specified vectors.
+        /// </summary>
+        /// <param name="vector1">The first vector to evaluate.</param>
+        /// <param name="vector2">The second vector to evaluate.</param>
+        /// <returns>The calculated Dot Product.</returns>
         public static double DotProduct(Vector3 vector1, Vector3 vector2)
         {
             return (vector1.X * vector2.X) + (vector1.Y * vector2.Y) + (vector1.Z * vector2.Z);
         }
 
         /// <summary>
-        /// Retrieves the cross product of the specified vectors
+        /// Calculates the Cross Product of the specified vectors
         /// </summary>
-        /// <param name="vector1"></param>
-        /// <param name="vector2"></param>
-        /// <returns></returns>
+        /// <param name="vector1">The first vector to evaluate.</param>
+        /// <param name="vector2">The second vector to evaluate.</param>
+        /// <returns>The calculated Cross Product.</returns>
         public static Vector3 CrossProduct(Vector3 vector1, Vector3 vector2)
         {
             Vector3 vector;
@@ -249,7 +250,7 @@ namespace LightBuzz.Vitruvius
         }
 
         /// <summary>
-        /// Retrieves the distance of the specified vectors in 3-D space.
+        /// Calculates the distance of the specified vectors in 3D space.
         /// </summary>
         /// <param name="vector1">The first vector to evaluate.</param>
         /// <param name="vector2">The second vector to evaluate.</param>
@@ -263,18 +264,23 @@ namespace LightBuzz.Vitruvius
             );
         }
 
+        /// <summary>
+        /// Calculates the distance btween the current and the specified vector in the 3D space.
+        /// </summary>
+        /// <param name="other">The vector to evaluate.</param>
+        /// <returns>The distance between the vectors.</returns>
         public double Distance(Vector3 other)
         {
             return Distance(this, other);
         }
 
         /// <summary>
-        /// Retrieves the angle, expressed in degrees, between the two specified vectors.
+        /// Calculates the angle, expressed in degrees, between the two specified vectors.
         /// </summary>
         /// <param name="vector1">The first vector to evaluate.</param>
         /// <param name="vector2">The second vector to evaluate.</param>
         /// <returns>The angle, in degrees, between vector1 and vector2.</returns>
-        public static double AngleBetween(Vector3 vector1, Vector3 vector2)
+        public static double Angle(Vector3 vector1, Vector3 vector2)
         {
             vector1.Normalize();
             vector2.Normalize();

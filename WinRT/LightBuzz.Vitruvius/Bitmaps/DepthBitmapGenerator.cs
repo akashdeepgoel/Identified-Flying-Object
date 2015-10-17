@@ -29,13 +29,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using WindowsPreview.Kinect;
@@ -45,14 +40,9 @@ namespace LightBuzz.Vitruvius
     /// <summary>
     /// Creates the bitmap representation of a Kinect depth frame.
     /// </summary>
-    public class DepthBitmapGenerator : IBitmapGenerator<DepthFrame>
+    public class DepthBitmapGenerator : BitmapGenerator<DepthFrame>
     {
         #region Properties
-
-        /// <summary>
-        /// Returns the RGB pixel values.
-        /// </summary>
-        public byte[] Pixels { get; protected set; }
 
         /// <summary>
         /// Returns the RGB pixel values with the players highlighted.
@@ -60,29 +50,9 @@ namespace LightBuzz.Vitruvius
         public byte[] HighlightedPixels { get; protected set; }
 
         /// <summary>
-        /// Returns the width of the bitmap.
-        /// </summary>
-        public int Width { get; protected set; }
-
-        /// <summary>
-        /// Returns the height of the bitmap.
-        /// </summary>
-        public int Height { get; protected set; }
-
-        /// <summary>
-        /// Returns the stream of the bitmap.
-        /// </summary>
-        public Stream Stream { get; protected set; }
-
-        /// <summary>
         /// Returns the stream of the bitmap with the players highlighted.
         /// </summary>
         public Stream HighlightedStream { get; protected set; }
-
-        /// <summary>
-        /// Returns the actual bitmap.
-        /// </summary>
-        public WriteableBitmap Bitmap { get; protected set; }
 
         /// <summary>
         /// Returns the actual bitmap with the players highlighted.
@@ -107,7 +77,7 @@ namespace LightBuzz.Vitruvius
         /// Updates the bitmap with new frame data.
         /// </summary>
         /// <param name="frame">The specified Kinect depth frame.</param>
-        public void Update(DepthFrame frame)
+        public override void Update(DepthFrame frame)
         {
             ushort minDepth = frame.DepthMinReliableDistance;
             ushort maxDepth = frame.DepthMaxReliableDistance;

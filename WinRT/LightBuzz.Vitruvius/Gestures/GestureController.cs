@@ -222,7 +222,7 @@ namespace LightBuzz.Vitruvius
         /// Handles the GestureRecognized event of the g control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="KinectSkeltonTracker.GestureEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="GestureEventArgs"/> instance containing the event data.</param>
         private void OnGestureRecognized(object sender, GestureEventArgs e)
         {
             if (GestureRecognized != null)

@@ -29,14 +29,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LightBuzz.Vitruvius
 {
+    /// <summary>
+    /// Generic class used to extract information from a series of frames.
+    /// </summary>
+    /// <typeparam name="T">The parameter we examine, e.g. <see cref="WindowsPreview.Kinect.Body"/>.</typeparam>
     public class BaseController<T>
     {
         #region Constants

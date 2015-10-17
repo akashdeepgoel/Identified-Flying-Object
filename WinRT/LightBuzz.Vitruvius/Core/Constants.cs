@@ -29,11 +29,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LightBuzz.Vitruvius
 {
@@ -53,17 +48,6 @@ namespace LightBuzz.Vitruvius
         /// Bytes per pixel.
         /// </summary>
         public static readonly int BYTES_PER_PIXEL = 4;
-
-        #endregion
-    }
-
-    public static class Strings
-    {
-        #region Constants
-
-        public static string COLOR = "vitruvius.color";
-        public static string DEPTH = "vitruvius.depth";
-        public static string INFRARED = "vitruvius.infrared";
 
         #endregion
     }

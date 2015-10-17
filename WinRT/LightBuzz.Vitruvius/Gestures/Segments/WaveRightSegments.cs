@@ -33,6 +33,9 @@ using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius.Gestures
 {
+    /// <summary>
+    /// The first part of a <see cref="GestureType.WaveRight"/> gesture.
+    /// </summary>
     public class WaveRightSegment1 : IGestureSegment
     {
         /// <summary>
@@ -60,6 +63,9 @@ namespace LightBuzz.Vitruvius.Gestures
         }
     }
 
+    /// <summary>
+    /// The second part of a <see cref="GestureType.WaveRight"/> gesture.
+    /// </summary>
     public class WaveRightSegment2 : IGestureSegment
     {
         /// <summary>

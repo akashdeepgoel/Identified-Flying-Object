@@ -33,6 +33,9 @@ using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius.Gestures
 {
+    /// <summary>
+    /// The first part of a <see cref="GestureType.ZoomIn"/>/<see cref="GestureType.ZoomOut"/> gesture.
+    /// </summary>
     public class ZoomSegment1 : IGestureSegment
     {
         /// <summary>
@@ -68,6 +71,9 @@ namespace LightBuzz.Vitruvius.Gestures
         }
     }
 
+    /// <summary>
+    /// The second part of a <see cref="GestureType.ZoomIn"/>/<see cref="GestureType.ZoomOut"/> gesture.
+    /// </summary>
     public class ZoomSegment2 : IGestureSegment
     {
         /// <summary>
@@ -100,6 +106,9 @@ namespace LightBuzz.Vitruvius.Gestures
         }
     }
 
+    /// <summary>
+    /// The third part of a <see cref="GestureType.ZoomIn"/>/<see cref="GestureType.ZoomOut"/> gesture.
+    /// </summary>
     public class ZoomSegment3 : IGestureSegment
     {
         /// <summary>

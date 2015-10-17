@@ -33,6 +33,9 @@ using WindowsPreview.Kinect;
 
 namespace LightBuzz.Vitruvius.Gestures
 {
+    /// <summary>
+    /// The first part of a <see cref="GestureType.JoinedHands"/> gesture.
+    /// </summary>
     public class JoinedHandsSegment1 : IGestureSegment
     {
         /// <summary>

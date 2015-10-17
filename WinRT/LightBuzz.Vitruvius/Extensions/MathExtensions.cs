@@ -30,10 +30,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using WindowsPreview.Kinect;
 
@@ -303,12 +299,47 @@ namespace LightBuzz.Vitruvius
         /// <param name="start">The start of the angle.</param>
         /// <param name="end">The end of the angle.</param>
         /// <returns>The angle, in degrees.</returns>
-        public static double AngleBetween(this CameraSpacePoint center, CameraSpacePoint start, CameraSpacePoint end)
+        public static double Angle(this CameraSpacePoint center, CameraSpacePoint start, CameraSpacePoint end)
         {
             Vector3 first = start.ToVector3() - center.ToVector3();
             Vector3 second = end.ToVector3() - center.ToVector3();
 
-            return Vector3.AngleBetween(first, second);
+            return Vector3.Angle(first, second);
+        }
+
+        /// <summary>
+        /// Calculates the angle between the specified points around the specified axis.
+        /// </summary>
+        /// <param name="center">The center of the angle.</param>
+        /// <param name="start">The start of the angle.</param>
+        /// <param name="end">The end of the angle.</param>
+        /// <param name="axis">The axis around which the angle is calculated.</param>
+        /// <returns>The angle, in degrees.</returns>
+        public static double Angle(this CameraSpacePoint center, CameraSpacePoint start, CameraSpacePoint end, Axis axis)
+        {
+            switch (axis)
+            {
+                case Axis.X:
+                    start.X = 0f;
+                    center.X = 0f;
+                    end.X = 0f;
+                    break;
+                case Axis.Y:
+                    start.Y = 0f;
+                    center.Y = 0f;
+                    end.Y = 0f;
+                    break;
+                case Axis.Z:
+                    start.Z = 0f;
+                    center.Z = 0f;
+                    end.Z = 0f;
+                    break;
+            }
+
+            Vector3 first = start.ToVector3() - center.ToVector3();
+            Vector3 second = end.ToVector3() - center.ToVector3();
+
+            return Vector3.Angle(first, second);
         }
 
         /// <summary>
@@ -318,12 +349,12 @@ namespace LightBuzz.Vitruvius
         /// <param name="start">The start of the angle.</param>
         /// <param name="end">The end of the angle.</param>
         /// <returns>The angle, in degrees.</returns>
-        public static double AngleBetween(this ColorSpacePoint center, ColorSpacePoint start, ColorSpacePoint end)
+        public static double Angle(this ColorSpacePoint center, ColorSpacePoint start, ColorSpacePoint end)
         {
             Vector3 first = start.ToVector3() - center.ToVector3();
             Vector3 second = end.ToVector3() - center.ToVector3();
 
-            return Vector3.AngleBetween(first, second);
+            return Vector3.Angle(first, second);
         }
 
         /// <summary>
@@ -333,12 +364,12 @@ namespace LightBuzz.Vitruvius
         /// <param name="start">The start of the angle.</param>
         /// <param name="end">The end of the angle.</param>
         /// <returns>The angle, in degrees.</returns>
-        public static double AngleBetween(this DepthSpacePoint center, DepthSpacePoint start, DepthSpacePoint end)
+        public static double Angle(this DepthSpacePoint center, DepthSpacePoint start, DepthSpacePoint end)
         {
             Vector3 first = start.ToVector3() - center.ToVector3();
             Vector3 second = end.ToVector3() - center.ToVector3();
 
-            return Vector3.AngleBetween(first, second);
+            return Vector3.Angle(first, second);
         }
 
         /// <summary>
@@ -348,9 +379,22 @@ namespace LightBuzz.Vitruvius
         /// <param name="start">The start of the angle.</param>
         /// <param name="end">The end of the angle.</param>
         /// <returns>The angle, in degrees.</returns>
-        public static double AngleBetween(this Joint center, Joint start, Joint end)
+        public static double Angle(this Joint center, Joint start, Joint end)
         {
-            return AngleBetween(center.Position, start.Position, end.Position);
+            return Angle(center.Position, start.Position, end.Position);
+        }
+
+        /// <summary>
+        /// Calculates the angle between the specified body joints aroudn the specified axis.
+        /// </summary>
+        /// <param name="center">The center of the angle.</param>
+        /// <param name="start">The start of the angle.</param>
+        /// <param name="end">The end of the angle.</param>
+        /// <param name="axis">The axis around which the angle is calculated.</param>
+        /// <returns>The angle, in degrees.</returns>
+        public static double Angle(this Joint center, Joint start, Joint end, Axis axis)
+        {
+            return Angle(center.Position, start.Position, end.Position, axis);
         }
 
         #endregion
@@ -389,7 +433,7 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Returns the length of the segments defined by the specified points.
         /// </summary>
-        /// <param name="joints">A collection of two or more points.</param>
+        /// <param name="points">A collection of two or more points.</param>
         /// <returns>The length of all the segments in meters.</returns>
         public static double Length(params CameraSpacePoint[] points)
         {

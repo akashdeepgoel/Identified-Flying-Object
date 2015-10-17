@@ -29,20 +29,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-using WindowsPreview.Kinect;
-
 namespace LightBuzz.Vitruvius
 {
     /// <summary>
-    /// Represents a single gesture segment which uses relative positioning of body parts to detect a gesture.
+    /// Provides Kinect utility functionality, including bitmap generation, frame capturing, background removal, angle calculation, joint extensions, gestures, and more.
     /// </summary>
-    public interface IGestureSegment
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    class NamespaceDoc
     {
-        /// <summary>
-        /// Updates the current gesture.
-        /// </summary>
-        /// <param name="body">The body.</param>
-        /// <returns>A GesturePartResult based on whether the gesture part has been completed.</returns>
-        GesturePartResult Update(Body body);
     }
 }

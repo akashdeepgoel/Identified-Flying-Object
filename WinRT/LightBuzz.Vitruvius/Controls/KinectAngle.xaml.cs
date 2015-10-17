@@ -30,26 +30,20 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using WindowsPreview.Kinect;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace LightBuzz.Vitruvius.Controls
 {
+    /// <summary>
+    /// Represents a XAML arc based on a given angle.
+    /// </summary>
     public sealed partial class KinectAngle : UserControl
     {
         #region Members
@@ -110,6 +104,9 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (CoordinateMapper)GetValue(CoordinateMapperProperty); }
             set { SetValue(CoordinateMapperProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="WindowsPreview.Kinect.CoordinateMapper"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty CoordinateMapperProperty =
             DependencyProperty.Register("CoordinateMapper", typeof(CoordinateMapper), typeof(KinectAngle), new PropertyMetadata(KinectSensor.GetDefault().CoordinateMapper));
 
@@ -121,6 +118,9 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (Brush)GetValue(FillProperty); }
             set { SetValue(FillProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="Fill"/> property.
+        /// </summary>
         public static readonly DependencyProperty FillProperty =
             DependencyProperty.Register("Fill", typeof(Brush), typeof(KinectAngle), new PropertyMetadata(new SolidColorBrush(Colors.White)));
 
@@ -132,6 +132,9 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (Brush)GetValue(StrokeProperty); }
             set { SetValue(StrokeProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="Stroke"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty StrokeProperty =
             DependencyProperty.Register("Stroke", typeof(Brush), typeof(KinectAngle), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
 
@@ -143,8 +146,11 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (Thickness)GetValue(StrokeThicknessProperty); }
             set { SetValue(StrokeThicknessProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="StrokeThickness"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty StrokeThicknessProperty =
-            DependencyProperty.Register("Thickness", typeof(Brush), typeof(KinectAngle), new PropertyMetadata(new Thickness(0)));
+            DependencyProperty.Register("StrokeThickness", typeof(Thickness), typeof(KinectAngle), new PropertyMetadata(new Thickness(0)));
 
         /// <summary>
         /// Gets or sets a value that specifies whether the arc is drawn in the Clockwise or Counterclockwise direction.
@@ -154,6 +160,9 @@ namespace LightBuzz.Vitruvius.Controls
             get { return (SweepDirection)GetValue(SweepDirectionProperty); }
             set { SetValue(SweepDirectionProperty, value); }
         }
+        /// <summary>
+        /// The <see cref="SweepDirection"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty SweepDirectionProperty =
             DependencyProperty.Register("SweepDirection", typeof(SweepDirection), typeof(KinectAngle), new PropertyMetadata(SweepDirection.Clockwise));
 
@@ -181,7 +190,7 @@ namespace LightBuzz.Vitruvius.Controls
             _vector1.Normalize();
             _vector2.Normalize();
 
-            _angle = Vector3.AngleBetween(_vector1, _vector2);
+            _angle = Vector3.Angle(_vector1, _vector2);
 
             start = middle - desiredRadius * _vector1;
             end = middle - desiredRadius * _vector2;

@@ -35,7 +35,7 @@ using System.Diagnostics;
 namespace LightBuzz.Vitruvius.Gestures
 {
     /// <summary>
-    /// The first part of the swipe down gesture with the right hand
+    /// The first part of a <see cref="GestureType.SwipeDown"/> gesture.
     /// </summary>
     public class SwipeDownSegment1 : IGestureSegment
     {
@@ -67,7 +67,7 @@ namespace LightBuzz.Vitruvius.Gestures
     }
 
     /// <summary>
-    /// The second part of the swipe down gesture for the right hand
+    /// The second part of a <see cref="GestureType.SwipeDown"/> gesture.
     /// </summary>
     public class SwipeDownSegment2 : IGestureSegment
     {
@@ -98,7 +98,7 @@ namespace LightBuzz.Vitruvius.Gestures
     }
 
     /// <summary>
-    /// The third part of the swipe down gesture for the right hand
+    /// The third part of a <see cref="GestureType.SwipeDown"/> gesture.
     /// </summary>
     public class SwipeDownSegment3 : IGestureSegment
     {
