@@ -107,6 +107,19 @@ router.route('/right')
 
 		});
 
+// on routes that end in /left
+// ----------------------------------------------------
+router.route('/left')
+	//create a forward (accessed at GET http://localhost:8080/api/left)
+	.get(function(req,res){
+		console.log("Left");
+		res.json({message : "We are going left"});
+		client_arDrone.left(0.5);
+
+		});
+
+// on routes that end in /dance
+// ----------------------------------------------------
 router.route('/dance')
 	//create a forward (accessed at GET http://localhost:8080/api/dance)
 	.get(function(req,res){
