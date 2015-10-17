@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using WindowsPreview.Kinect;
 using LightBuzz.Vitruvius;
+using System.Diagnostics;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -87,6 +88,55 @@ namespace Samples
         void GestureController_GestureRecognized(object sender, GestureEventArgs e)
         {
             tblGestures.Text = e.GestureType.ToString();
+            switch (e.GestureType)
+            {
+
+                case GestureType.JoinedHands:
+                    Debug.WriteLine("JH");
+                    request.send_request("/takeoff");
+                    Debug.WriteLine("Aaye aaye! Captain.");
+                    break;
+                case GestureType.Menu:
+                    Debug.WriteLine("Menu");
+                    break;
+                case GestureType.SwipeDown:
+                    Debug.WriteLine("SD");
+                    break;
+                case GestureType.SwipeLeft:
+                    Debug.WriteLine("Sl");
+                    break;
+                case GestureType.SwipeRight:
+                    Debug.WriteLine("SR");
+                    request.send_request("/right");
+                    Debug.WriteLine("Idhar chala mai udhar chala (right :P)");
+                    break;
+                case GestureType.SwipeUp:
+                    Debug.WriteLine("SU");
+                    request.send_request("/up");
+                    Debug.WriteLine("Stay High All The Time!");
+                    break;
+                case GestureType.WaveLeft:
+                    Debug.WriteLine("WL");
+                    break;
+                case GestureType.WaveRight:
+                    Debug.WriteLine("WR");
+                    request.send_request("/land");
+                    Debug.WriteLine("Au Revoir");
+                    break;
+                case GestureType.ZoomIn:
+                    Debug.WriteLine("ZI");
+                    request.send_request("/forward");
+                    Debug.WriteLine("Winter is Coming!");
+                    break;
+                case GestureType.ZoomOut:
+                    Debug.WriteLine("ZO");
+                    request.send_request("/back");
+                    Debug.WriteLine("You know nothing Jon Snow.");
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 }
