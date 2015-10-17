@@ -155,6 +155,8 @@ namespace VitruviusTest
                     break;
                 case GestureType.SwipeLeft:
                     Console.WriteLine("Sl");
+                    request.send_request("/left");
+                    Console.WriteLine("We are going left");
                     break;
                 case GestureType.SwipeRight:
                     Console.WriteLine("SR");
@@ -168,6 +170,8 @@ namespace VitruviusTest
                     break;
                 case GestureType.WaveLeft:
                     Console.WriteLine("WL");
+                    request.send_request("/dance");
+                    Console.WriteLine("Sunn raha hai na tu, Naach raha hun mein");
                     break;
                 case GestureType.WaveRight:
                     Console.WriteLine("WR");
@@ -185,6 +189,7 @@ namespace VitruviusTest
                     Console.WriteLine("You know nothing Jon Snow.");
                     break;
                 default:
+                    e.
                     break;
             }
         }
