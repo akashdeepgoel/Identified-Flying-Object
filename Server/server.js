@@ -70,7 +70,7 @@ router.route('/forward')
 	.get(function(req,res){
 		console.log("Forward");
 		res.json({message : "If you are a rider, the number one thing to do is to move forward."});
-		client_arDrone.front(0.5);
+		client_arDrone.front(0.3);
 
 		});
 
@@ -81,7 +81,7 @@ router.route('/back')
 	.get(function(req,res){
 		console.log("Back");
 		res.json({message : "You know nothing Jon Snow."});
-		client_arDrone.back(0.5);
+		client_arDrone.back(0.3);
 
 		});
 
@@ -92,7 +92,7 @@ router.route('/up')
 	.get(function(req,res){
 		console.log("Up");
 		res.json({message : "Stay High All The Time!"});
-		client_arDrone.up(0.5);
+		client_arDrone.up(0.3);
 
 		});
 
@@ -103,7 +103,7 @@ router.route('/right')
 	.get(function(req,res){
 		console.log("Right");
 		res.json({message : "Idhar chala mai udhar chala (right :P)"});
-		client_arDrone.right(0.5);
+		client_arDrone.right(0.3);
 
 		});
 
@@ -114,7 +114,7 @@ router.route('/left')
 	.get(function(req,res){
 		console.log("Left");
 		res.json({message : "We are going left"});
-		client_arDrone.left(0.5);
+		client_arDrone.left(0.3);
 
 		});
 
@@ -125,7 +125,7 @@ router.route('/dance')
 	.get(function(req,res){
 		console.log("Dance");
 		res.json({message : "Sunn raha hai na tu, Naach raha hun mein"});
-		client_arDrone.animate(thetaDance,2000);
+		client_arDrone.animate('thetaDance',2000);
 
 		});
 
