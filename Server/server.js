@@ -73,6 +73,10 @@ router.route('/forward')
 		console.log("Forward");
 		res.json({message : "The number one thing to do is to move forward."});
 		client_arDrone.front(0.2);
+		function myFunction(){
+			client_arDrone.stop();
+			console.log("Safety Maintained");
+		}
 
 		});
 
@@ -84,6 +88,10 @@ router.route('/back')
 		console.log("Back");
 		res.json({message : "We are going back."});
 		client_arDrone.back(0.2);
+		function myFunction(){
+			client_arDrone.stop();
+			console.log("Safety Maintained");
+		}
 
 		});
 
