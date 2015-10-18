@@ -60,6 +60,7 @@ router.route('/land')
 	.get(function(req, res){
 		console.log("Land");
 		res.json({message : "We are going down."});
+		client_arDrone.stop();
 		client_arDrone.land();
 		
 	});
@@ -105,6 +106,11 @@ router.route('/right')
 		console.log("Right");
 		res.json({message : "We are going right"});
 		client_arDrone.right(0.2);
+		setTimeout(myFunction, 1000);
+		function myFunction(){
+			client_arDrone.stop();
+			console.log("Safety Maintained");
+		}
 
 		});
 
@@ -116,6 +122,11 @@ router.route('/left')
 		console.log("Left");
 		res.json({message : "We are going left"});
 		client_arDrone.left(0.2);
+		setTimeout(myFunction, 1000);
+		function myFunction(){
+			client_arDrone.stop();
+			console.log("Safety Maintained");
+		}
 
 		});
 
