@@ -148,7 +148,7 @@ router.route('/animateLEDs')
 	.get(function(req,res){
 		console.log("Animate LEDs");
 		res.json({message : "Let the game begin!"});
-		client_arDrone.animateLeds('fire',5,4);
+		client_arDrone.animateLeds('blinkGreenRed',5,4);
 
 		});
 
