@@ -37,7 +37,7 @@ router.route('/takeoff')
                  client_arDrone.takeoff();
        		 client_arDrone.stop();
 
-		client_arDrone.up(0.6);
+		client_arDrone.up(0.3);
 		client_arDrone.stop();
 		client_arDrone.stop();
 		client_arDrone.stop();
@@ -82,7 +82,7 @@ router.route('/back')
 	.get(function(req,res){
 		console.log("Back");
 		res.json({message : "We are going back."});
-		client_arDrone.back(0.3);
+		client_arDrone.back(0.2);
 
 		});
 
@@ -126,11 +126,11 @@ router.route('/dance')
 	.get(function(req,res){
 		console.log("Dance");
 		res.json({message : "Sunn raha hai na tu, Naach raha hun mein"});
-		client_arDrone.animate('wave',4000);
-
+		client_arDrone.animate('wave',2000);
+		
 		});
 
-// on routes that end in /dance
+// on routes that end in /animateLEDs
 // ----------------------------------------------------
 router.route('/animateLEDs')
 	//create a forward (accessed at GET http://localhost:8080/api/animateLEDs)
