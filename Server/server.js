@@ -30,31 +30,32 @@ var client_arDrone = arDrone.createClient();
 // on routes that end in /takeoff
 // ----------------------------------------------------
 router.route('/takeoff')
-	//create a takeoff (accessed at POST http://localhost:8080/api/takeoff)
-	 .post(function(req, res){
-	 	console.log("Takeoff");
-                res.json({message : "Aaye aaye! Captain."});
-                client_arDrone.takeoff();
-
-         })
          //create a takeoff (accessed at GET http://localhost:8080/api/takeoff)
 	        .get(function(req, res){
                  console.log("Takeoff");
                  res.json({message : "Aaye aaye! Captain."});
                  client_arDrone.takeoff();
-         });
+       		 client_arDrone.stop();
 
+		client_arDrone.up(0.6);
+		client_arDrone.stop();
+		client_arDrone.stop();
+		client_arDrone.stop();
+
+         });
+// on routes that end in /stop
+// ----------------------------------------------------
+router.route('/stop')
+         //create a takeoff (accessed at GET http://localhost:8080/api/stop)
+	        .get(function(req, res){
+                 console.log("Stop");
+                 res.json({message : "Jaisa aap kahein"});
+                 client_arDrone.stop();
+         });
 
 // on routes that end in /land
 // ----------------------------------------------------
 router.route('/land')
-        //create a land (accessed at POST http://localhost:8080/api/land)
-        .post(function(req, res){
-                console.log("Land");
-                res.json({message : "Fasten your Seat belts. We are going down."});
-		client_arDrone.land();
-                
-        })
 	//create a land (accessed at GET http://localhost:8080/api/land)
 	.get(function(req, res){
 		console.log("Land");
@@ -70,7 +71,7 @@ router.route('/forward')
 	.get(function(req,res){
 		console.log("Forward");
 		res.json({message : "If you are a rider, the number one thing to do is to move forward."});
-		client_arDrone.front(0.3);
+		client_arDrone.front(0.1);
 
 		});
 
@@ -92,7 +93,7 @@ router.route('/up')
 	.get(function(req,res){
 		console.log("Up");
 		res.json({message : "Stay High All The Time!"});
-		client_arDrone.up(0.3);
+		client_arDrone.up(0.1);
 
 		});
 
@@ -103,7 +104,7 @@ router.route('/right')
 	.get(function(req,res){
 		console.log("Right");
 		res.json({message : "Idhar chala mai udhar chala (right :P)"});
-		client_arDrone.right(0.3);
+		client_arDrone.right(0.1);
 
 		});
 
@@ -114,7 +115,7 @@ router.route('/left')
 	.get(function(req,res){
 		console.log("Left");
 		res.json({message : "We are going left"});
-		client_arDrone.left(0.3);
+		client_arDrone.left(0.1);
 
 		});
 
@@ -125,7 +126,7 @@ router.route('/dance')
 	.get(function(req,res){
 		console.log("Dance");
 		res.json({message : "Sunn raha hai na tu, Naach raha hun mein"});
-		client_arDrone.animate('thetaDance',2000);
+		client_arDrone.animate('flipAhead',2000);
 
 		});
 
