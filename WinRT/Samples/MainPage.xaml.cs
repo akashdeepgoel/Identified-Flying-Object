@@ -220,7 +220,8 @@ namespace Samples
                     //Debug.WriteLine("Stay High All The Time!");
                     break;
                 case GestureType.WaveLeft:
-                    Debug.WriteLine("WL");
+                    Debug.WriteLine("Wave Left!");
+                    request.send_request("/animateLEDs");
                     break;
                 case GestureType.WaveRight:
                     Debug.WriteLine("Going Down!");

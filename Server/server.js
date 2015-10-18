@@ -49,7 +49,7 @@ router.route('/stop')
          //create a takeoff (accessed at GET http://localhost:8080/api/stop)
 	        .get(function(req, res){
                  console.log("Stop");
-                 res.json({message : "Jaisa aap kahein"});
+                 res.json({message : "Hovering"});
                  client_arDrone.stop();
          });
 
@@ -59,7 +59,7 @@ router.route('/land')
 	//create a land (accessed at GET http://localhost:8080/api/land)
 	.get(function(req, res){
 		console.log("Land");
-		res.json({message : "Fasten your Seat belts. We are going down."});
+		res.json({message : "We are going down."});
 		client_arDrone.land();
 		
 	});
@@ -70,8 +70,8 @@ router.route('/forward')
 	//create a forward (accessed at GET http://localhost:8080/api/forward)
 	.get(function(req,res){
 		console.log("Forward");
-		res.json({message : "If you are a rider, the number one thing to do is to move forward."});
-		client_arDrone.front(0.1);
+		res.json({message : "The number one thing to do is to move forward."});
+		client_arDrone.front(0.2);
 
 		});
 
@@ -81,7 +81,7 @@ router.route('/back')
 	//create a forward (accessed at GET http://localhost:8080/api/back)
 	.get(function(req,res){
 		console.log("Back");
-		res.json({message : "You know nothing Jon Snow."});
+		res.json({message : "We are going back."});
 		client_arDrone.back(0.3);
 
 		});
@@ -93,7 +93,7 @@ router.route('/up')
 	.get(function(req,res){
 		console.log("Up");
 		res.json({message : "Stay High All The Time!"});
-		client_arDrone.up(0.1);
+		client_arDrone.up(0.2);
 
 		});
 
@@ -103,8 +103,8 @@ router.route('/right')
 	//create a forward (accessed at GET http://localhost:8080/api/right)
 	.get(function(req,res){
 		console.log("Right");
-		res.json({message : "Idhar chala mai udhar chala (right :P)"});
-		client_arDrone.right(0.1);
+		res.json({message : "We are going right"});
+		client_arDrone.right(0.2);
 
 		});
 
@@ -115,7 +115,7 @@ router.route('/left')
 	.get(function(req,res){
 		console.log("Left");
 		res.json({message : "We are going left"});
-		client_arDrone.left(0.1);
+		client_arDrone.left(0.2);
 
 		});
 
@@ -127,6 +127,17 @@ router.route('/dance')
 		console.log("Dance");
 		res.json({message : "Sunn raha hai na tu, Naach raha hun mein"});
 		client_arDrone.animate('flipAhead',2000);
+
+		});
+
+// on routes that end in /dance
+// ----------------------------------------------------
+router.route('/animateLEDs')
+	//create a forward (accessed at GET http://localhost:8080/api/animateLEDs)
+	.get(function(req,res){
+		console.log("Animate LEDs");
+		res.json({message : "Let the game begin!"});
+		client_arDrone.animateLeds('fire',5,4);
 
 		});
 
