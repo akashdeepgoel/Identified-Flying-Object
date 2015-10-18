@@ -29,9 +29,11 @@ namespace Samples
         KinectSensor _sensor;
         MultiSourceFrameReader _reader;
         GestureController _gestureController;
-
+        bool isRunning = false;
         public MainPage()
+        
         {
+           
             InitializeComponent();
             
             _navigationHelper = new NavigationHelper(this);
@@ -170,9 +172,19 @@ namespace Samples
         async private void OurFunction()
         {
             MyHttpClient request1 = new MyHttpClient();
+            if(isRunning==false)
+            {
+                Debug.WriteLine("Taking Off!");
+                request1.send_request("/takeoff");
+                isRunning = true;
+            }
 
-            Debug.WriteLine("Dance Basanti!");
-            request1.send_request("/dance");
+            else
+            {
+                Debug.WriteLine("Stop!");
+                request1.send_request("/stop");
+            }
+
 
         }
         void GestureController_GestureRecognized(object sender, GestureEventArgs e)
@@ -183,9 +195,9 @@ namespace Samples
             {
 
                 case GestureType.JoinedHands:
-                    Debug.WriteLine("JH");
-                    request.send_request("/takeoff");
-                    Debug.WriteLine("Aaye aaye! Captain.");
+                    //Debug.WriteLine("JH");
+                    request.send_request("/dance");
+                    Debug.WriteLine("Dance");
                     break;
                 case GestureType.Menu:
                     Debug.WriteLine("Menu");
@@ -194,35 +206,37 @@ namespace Samples
                     Debug.WriteLine("SD");
                     break;
                 case GestureType.SwipeLeft:
-                    Debug.WriteLine("Sl");
+                    Debug.WriteLine("Swipe Left!");
+                    request.send_request("/left");
                     break;
                 case GestureType.SwipeRight:
-                    Debug.WriteLine("SR");
+                    Debug.WriteLine("Swipe Right!");
                     request.send_request("/right");
-                    Debug.WriteLine("Idhar chala mai udhar chala (right :P)");
+                    //Debug.WriteLine("Going Right!");
                     break;
                 case GestureType.SwipeUp:
-                    Debug.WriteLine("SU");
+                    Debug.WriteLine("Swipe Up!");
                     request.send_request("/up");
-                    Debug.WriteLine("Stay High All The Time!");
+                    //Debug.WriteLine("Stay High All The Time!");
                     break;
                 case GestureType.WaveLeft:
                     Debug.WriteLine("WL");
                     break;
                 case GestureType.WaveRight:
-                    Debug.WriteLine("WR");
+                    Debug.WriteLine("Going Down!");
                     request.send_request("/land");
-                    Debug.WriteLine("Au Revoir");
+                    //Debug.WriteLine("Au Revoir");
+                    isRunning = false;
                     break;
                 case GestureType.ZoomIn:
-                    Debug.WriteLine("ZI");
+                    Debug.WriteLine("Zoom In");
                     request.send_request("/forward");
-                    Debug.WriteLine("Winter is Coming!");
+                    //Debug.WriteLine("Winter is Coming!");
                     break;
                 case GestureType.ZoomOut:
-                    Debug.WriteLine("ZO");
+                    Debug.WriteLine("Zoom Out");
                     request.send_request("/back");
-                    Debug.WriteLine("You know nothing Jon Snow.");
+                    //Debug.WriteLine("You know nothing Jon Snow.");
                     break;
                 default:
                     break;
