@@ -126,7 +126,7 @@ router.route('/dance')
 	.get(function(req,res){
 		console.log("Dance");
 		res.json({message : "Sunn raha hai na tu, Naach raha hun mein"});
-		client_arDrone.animate('flipAhead',2000);
+		client_arDrone.animate('wave',4000);
 
 		});
 
